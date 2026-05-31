@@ -8,17 +8,17 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative w-full overflow-hidden bg-[#e8e4dc]"
-      style={{ minHeight: "560px" }}
+      className="relative w-full overflow-hidden"
+      style={{ minHeight: "620px" }}
     >
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap");
       `}</style>
 
-      <div className="relative flex w-full h-full" style={{ minHeight: "560px" }}>
+      <div className="relative flex w-full" style={{ minHeight: "620px" }}>
 
-        {/* LEFT — Gym image, half width */}
-        <div className="relative w-[52%] overflow-hidden" style={{ minHeight: "560px" }}>
+        {/* LEFT — Gym image */}
+        <div className="relative overflow-hidden" style={{ width: "50%", minHeight: "620px" }}>
           <Image
             src="/assets/bg.jpg"
             alt="Gym interior"
@@ -26,132 +26,186 @@ export default function AboutSection() {
             className="object-cover object-center"
             priority
           />
+          <div
+            className="absolute inset-y-0 right-0"
+            style={{
+              width: "280px",
+              background: "linear-gradient(to right, transparent 0%, rgba(15,15,15,0.2) 50%, rgba(15,15,15,0.72) 100%)",
+              zIndex: 2,
+            }}
+          />
         </div>
 
-        {/* TORN PAPER EFFECT — absolutely positioned in the middle */}
+        {/* CENTER — Torn paper divider */}
         <div
-          className="absolute top-0 bottom-0 z-10"
-          style={{
-            left: "44%",
-            width: "160px",
-          }}
+          className="absolute inset-y-0 z-20 pointer-events-none"
+          style={{ left: "34%", width: "320px" }}
         >
           <svg
-            viewBox="0 0 160 600"
+            viewBox="0 0 320 620"
             preserveAspectRatio="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full h-full"
+            style={{ width: "100%", height: "100%" }}
           >
+            <defs>
+              <linearGradient id="torn-fill" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stopColor="#111" stopOpacity="0" />
+                <stop offset="18%"  stopColor="#888" stopOpacity="0.35" />
+                <stop offset="42%"  stopColor="#d0d0d0" stopOpacity="1" />
+                <stop offset="70%"  stopColor="#acacac" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="#2a2a2a" stopOpacity="0" />
+              </linearGradient>
+              <filter id="paper-shadow">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+                <feOffset dx="-4" dy="1" result="offset"/>
+                <feComposite in="SourceGraphic" in2="offset" operator="over"/>
+              </filter>
+            </defs>
+
+            {/*
+              Left edge: 7 tears, randomly placed — not evenly spaced
+              y positions: 0, 68, 145, 230, 340, 448, 530, 620
+              Right edge: also 7 tears, different y positions
+              y positions: 0, 52, 160, 268, 370, 475, 560, 620
+              Width of each tear: varies between 24–38px, gentle angles
+            */}
             <path
+              fill="url(#torn-fill)"
+              filter="url(#paper-shadow)"
               d="
-                M80,0
-                L85,18 L72,32 L90,44 L68,60 L88,74
-                L65,90 L84,104 L70,120 L92,134
-                L66,150 L86,164 L72,180 L94,196
-                L64,212 L88,228 L70,244 L90,258
-                L68,274 L86,290 L74,306 L92,320
-                L66,336 L84,352 L70,368 L90,382
-                L68,398 L88,414 L72,428 L92,444
-                L66,460 L86,476 L74,492 L90,506
-                L68,522 L84,538 L72,554 L80,600
-                L160,600 L160,0 Z
+                M 80 0
+                L 58 68
+                L 88 145
+                L 62 230
+                L 90 340
+                L 60 448
+                L 86 530
+                L 72 620
+
+                L 246 620
+                L 270 560
+                L 240 475
+                L 268 370
+                L 236 268
+                L 264 160
+                L 238 52
+                L 252 0
+
+                Z
               "
-              fill="#e8e4dc"
             />
-            {/* White torn highlight strip */}
+
+            {/* Inner lighter strip */}
             <path
+              fill="#e2e2e2"
+              opacity="0.45"
               d="
-                M80,0
-                L85,18 L72,32 L90,44 L68,60 L88,74
-                L65,90 L84,104 L70,120 L92,134
-                L66,150 L86,164 L72,180 L94,196
-                L64,212 L88,228 L70,244 L90,258
-                L68,274 L86,290 L74,306 L92,320
-                L66,336 L84,352 L70,368 L90,382
-                L68,398 L88,414 L72,428 L92,444
-                L66,460 L86,476 L74,492 L90,506
-                L68,522 L84,538 L72,554 L80,600
-                L95,600
-                L98,554 L82,538 L100,522
-                L82,506 L102,492 L88,476 L106,460
-                L80,444 L100,428 L86,414 L104,398
-                L82,382 L102,368 L88,352 L104,336
-                L82,320 L100,306 L88,290 L100,274
-                L82,258 L102,244 L90,228 L106,212
-                L82,196 L100,180 L88,164 L104,150
-                L80,134 L100,120 L86,104 L102,90
-                L80,74 L98,60 L82,44 L100,32 L90,18 L95,0 Z
+                M 102 0
+                L 80 68
+                L 110 145
+                L 84 230
+                L 112 340
+                L 82 448
+                L 108 530
+                L 94 620
+
+                L 226 620
+                L 250 560
+                L 220 475
+                L 248 370
+                L 216 268
+                L 244 160
+                L 218 52
+                L 232 0
+
+                Z
               "
-              fill="white"
-              opacity="0.85"
             />
           </svg>
         </div>
 
-        {/* RIGHT — Dark brown content panel */}
+        {/* RIGHT — Two-tone content panel */}
         <div
-          className="relative flex flex-col justify-center z-20 bg-[#3b2f1e]"
-          style={{ width: "56%", marginLeft: "auto", padding: "60px 56px 60px 80px" }}
+          className="relative z-10 flex flex-col"
+          style={{ width: "56%", marginLeft: "auto" }}
         >
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="text-white font-extrabold uppercase leading-tight mb-8"
+          {/* Top dark charcoal — heading */}
+          <div
             style={{
-              fontFamily: "'Oswald', sans-serif",
-              fontSize: "clamp(22px, 2.8vw, 36px)",
-              letterSpacing: "0.05em",
+              backgroundColor: "#2a2a2a",
+              padding: "56px 60px 56px 155px",
+              flex: "0 0 auto",
             }}
           >
-            Transform Your Body And
-            <br />
-            Build Strength In A Space
-            <br />
-            Designed For Real Results
-          </motion.h2>
+            <motion.h2
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="font-extrabold uppercase leading-tight"
+              style={{
+                fontFamily: "'Oswald', sans-serif",
+                fontSize: "clamp(20px, 2.4vw, 32px)",
+                letterSpacing: "0.07em",
+                color: "#e8e8e8",
+              }}
+            >
+              Transform Your Body And
+              <br />
+              Build Strength In A Space
+              <br />
+              <span style={{ color: "#c9a227" }}>Designed For Real Results</span>
+            </motion.h2>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="text-[#d4cfc7] leading-relaxed mb-10"
+          {/* Bottom warm gray — description + button */}
+          <div
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: "clamp(13px, 1.4vw, 16px)",
-              letterSpacing: "0.04em",
-              maxWidth: "460px",
-              textAlign: "justify",
+              backgroundColor: "#b8b4ac",
+              padding: "52px 60px 52px 155px",
+              flex: "1 1 auto",
             }}
           >
-            We are dedicated to helping you achieve your fitness goals through
-            expert guidance, modern equipment, and a supportive environment.
-            Whether you're a beginner or an athlete, our gym is built to inspire
-            strength, confidence, and consistency.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="leading-relaxed mb-10"
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "clamp(13px, 1.4vw, 17px)",
+                letterSpacing: "0.03em",
+                textAlign: "justify",
+                maxWidth: "460px",
+                fontWeight: 600,
+                color: "#1a1a1a",
+              }}
+            >
+              We are dedicated to helping you achieve your fitness goals through
+              expert guidance, modern equipment, and a supportive environment.
+              Whether you're a beginner or an athlete, our gym is built to
+              inspire strength, confidence, and consistency.
+            </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <Link href="#contact">
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "#b8911f" }}
-                whileTap={{ scale: 0.97 }}
-                className="px-8 py-3 rounded-full bg-[#c9a227] text-white font-bold uppercase tracking-widest shadow-lg transition-colors duration-200"
-                style={{
-                  fontFamily: "'Oswald', sans-serif",
-                  fontSize: "14px",
-                }}
-              >
-                Reach Us
-              </motion.button>
-            </Link>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Link href="#contact">
+                <motion.button
+                  whileHover={{ scale: 1.05, backgroundColor: "#b8911f" }}
+                  whileTap={{ scale: 0.97 }}
+                  className="px-9 py-3 rounded-full bg-[#c9a227] text-white font-bold uppercase tracking-widest shadow-md transition-colors duration-200"
+                  style={{ fontFamily: "'Oswald', sans-serif", fontSize: "14px" }}
+                >
+                  Reach Us
+                </motion.button>
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
