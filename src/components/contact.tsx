@@ -1,18 +1,36 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { User, Mail, MessageSquare, Send } from "lucide-react";
+import { User, Mail, MessageSquare, Send, Phone, MapPin } from "lucide-react";
 
 export default function ContactSection() {
   return (
     <section
       id="contact"
       className="relative w-full"
-      style={{ backgroundColor: "#e8e4dc", padding: "60px 20px" }}
+      style={{ backgroundColor: "#e8e4dc", padding: "40px 0" }}
     >
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap");
+        .contact-input::placeholder {
+          color: #555555;
+          font-family: 'Barlow Condensed', sans-serif;
+          letter-spacing: 0.04em;
+          font-size: 14px;
+        }
+        .contact-input:focus {
+          border-bottom-color: #c9a227 !important;
+          outline: none;
+        }
+        @media (max-width: 768px) {
+          .contact-content {
+            justify-content: center !important;
+            padding: 24px 16px !important;
+          }
+          .contact-card {
+            max-width: 100% !important;
+          }
+        }
       `}</style>
 
       <motion.div
@@ -20,174 +38,304 @@ export default function ContactSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="relative overflow-hidden mx-auto"
         style={{
-          borderRadius: "32px",
-          maxWidth: "1700px",
-          minHeight: "580px",
-          boxShadow: "0 12px 60px rgba(0,0,0,0.25)",
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: "24px",
+          margin: "0 80px",
+          minHeight: "560px",
+          boxShadow: "0 12px 48px rgba(0,0,0,0.25)",
         }}
       >
         {/* Background image */}
-        <div className="absolute inset-0 z-0">
-          <Image
+        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+          <img
             src="/assets/contact-bg.jpg"
             alt="Contact background"
-            fill
-            className="object-cover object-left"
-            priority
-          />
-          {/* Transparent on left (phone stays visible), darkens only on right where form sits */}
-          <div
-            className="absolute inset-0"
             style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "50% center",
+              display: "block",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
               background:
-                "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 35%, rgba(10,10,10,0.45) 55%, rgba(10,10,10,0.75) 100%)",
+                "linear-gradient(to left, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.80) 35%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.02) 72%, rgba(0,0,0,0) 82%)",
             }}
           />
         </div>
 
-        {/* Content row — form on right */}
-        <div className="relative z-10 flex items-center justify-end h-full min-h-[580px] pr-48 py-16">
+        {/* Decorative gold ring top-right */}
+        <div
+          style={{
+            position: "absolute",
+            top: -60,
+            right: -60,
+            width: 220,
+            height: 220,
+            borderRadius: "50%",
+            border: "2px solid rgba(201,162,39,0.18)",
+            zIndex: 1,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: -20,
+            right: -20,
+            width: 130,
+            height: 130,
+            borderRadius: "50%",
+            border: "1.5px solid rgba(201,162,39,0.12)",
+            zIndex: 1,
+          }}
+        />
+
+        {/* Content */}
+        <div
+          className="contact-content"
+          style={{
+            position: "relative",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            minHeight: "560px",
+            padding: "40px 160px 40px 40px",
+          }}
+        >
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.15 }}
-            className="flex flex-col"
+            className="contact-card"
             style={{
-              backgroundColor: "rgba(28, 28, 28, 0.93)",
-              backdropFilter: "blur(8px)",
-              borderRadius: "20px",
-              padding: "52px 52px",
+              borderRadius: "18px",
               width: "100%",
-              maxWidth: "560px",
-              boxShadow: "0 8px 40px rgba(0,0,0,0.5)",
+              maxWidth: "460px",
+              overflow: "hidden",
+              boxShadow: "0 8px 48px rgba(0,0,0,0.65)",
             }}
           >
-            <h2
-              className="text-white text-center font-bold mb-1"
+            {/* Gold accent bar at top */}
+            <div style={{ height: "4px", background: "linear-gradient(to right, #c9a227, #f0d060, #c9a227)" }} />
+
+            {/* Info strip */}
+            <div
               style={{
-                fontFamily: "'Oswald', sans-serif",
-                fontSize: "32px",
-                letterSpacing: "0.06em",
+                backgroundColor: "#1a1a1a",
+                padding: "14px 28px",
+                display: "flex",
+                gap: "24px",
+                alignItems: "center",
+                borderBottom: "1px solid #2a2a2a",
               }}
             >
-              Contact Us
-            </h2>
-            <p
-              className="text-center mb-8"
+              {[
+                { icon: <Phone size={12} color="#c9a227" />, text: "+94 77 123 4567" },
+                { icon: <MapPin size={12} color="#c9a227" />, text: "Ratnapura, Sri Lanka" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  {item.icon}
+                  <span
+                    style={{
+                      fontFamily: "'Barlow Condensed', sans-serif",
+                      fontSize: "12px",
+                      color: "#888",
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    {item.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Form body */}
+            <div
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: "14px",
-                color: "#999999",
-                letterSpacing: "0.04em",
+                backgroundColor: "rgba(22, 22, 22, 0.97)",
+                backdropFilter: "blur(12px)",
+                padding: "32px 36px 36px",
               }}
             >
-              Any question or remarks? Just write us a message!
-            </p>
+              {/* Heading */}
+              <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                <h2
+                  style={{
+                    fontFamily: "'Oswald', sans-serif",
+                    fontSize: "28px",
+                    letterSpacing: "0.06em",
+                    color: "#ffffff",
+                    fontWeight: 700,
+                    marginBottom: "4px",
+                  }}
+                >
+                  Contact Us
+                </h2>
+                <div
+                  style={{
+                    width: "40px",
+                    height: "2px",
+                    backgroundColor: "#c9a227",
+                    margin: "8px auto 10px",
+                  }}
+                />
+                <p
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "14px",
+                    color: "#888",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Any question or remarks? Just write us a message!
+                </p>
+              </div>
 
-            {/* Name */}
-            <div className="mb-6">
-              <label
-                className="flex items-center gap-2 mb-2"
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "12px",
-                  color: "#bbbbbb",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}
-              >
-                <User size={12} color="#c9a227" />
-                Name
-              </label>
-              <input
-                type="text"
-                placeholder="Your full name"
-                className="w-full bg-transparent outline-none pb-2"
-                style={{
-                  borderBottom: "1px solid #444",
-                  color: "#ffffff",
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "15px",
-                }}
-              />
-            </div>
+              {/* Name */}
+              <div style={{ marginBottom: "18px" }}>
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "12px",
+                    color: "#c9a227",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <User size={12} color="#c9a227" />
+                  Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Your full name"
+                  className="contact-input"
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    borderBottom: "1px solid #333",
+                    color: "#fff",
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "14px",
+                    paddingBottom: "8px",
+                    display: "block",
+                  }}
+                />
+              </div>
 
-            {/* Email */}
-            <div className="mb-6">
-              <label
-                className="flex items-center gap-2 mb-2"
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "12px",
-                  color: "#bbbbbb",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}
-              >
-                <Mail size={12} color="#c9a227" />
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your email address here"
-                className="w-full bg-transparent outline-none pb-2"
-                style={{
-                  borderBottom: "1px solid #444",
-                  color: "#ffffff",
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "15px",
-                }}
-              />
-            </div>
+              {/* Email */}
+              <div style={{ marginBottom: "18px" }}>
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "12px",
+                    color: "#c9a227",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Mail size={12} color="#c9a227" />
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Enter your email address here"
+                  className="contact-input"
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    borderBottom: "1px solid #333",
+                    color: "#fff",
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "14px",
+                    paddingBottom: "8px",
+                    display: "block",
+                  }}
+                />
+              </div>
 
-            {/* Message */}
-            <div className="mb-9">
-              <label
-                className="flex items-center gap-2 mb-2"
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "12px",
-                  color: "#bbbbbb",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}
-              >
-                <MessageSquare size={12} color="#c9a227" />
-                Message
-              </label>
-              <textarea
-                placeholder="Enter your message here..."
-                rows={3}
-                className="w-full bg-transparent outline-none pb-2 resize-none"
-                style={{
-                  borderBottom: "1px solid #444",
-                  color: "#ffffff",
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontSize: "15px",
-                }}
-              />
-            </div>
+              {/* Message */}
+              <div style={{ marginBottom: "24px" }}>
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "12px",
+                    color: "#c9a227",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <MessageSquare size={12} color="#c9a227" />
+                  Message
+                </label>
+                <textarea
+                  placeholder="Enter your message here..."
+                  rows={3}
+                  className="contact-input"
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    borderBottom: "1px solid #333",
+                    color: "#fff",
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: "14px",
+                    paddingBottom: "8px",
+                    resize: "none",
+                    display: "block",
+                  }}
+                />
+              </div>
 
-            {/* Send */}
-            <div className="flex justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "#b8911f" }}
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 px-12 py-3 rounded-full font-bold uppercase tracking-widest transition-colors duration-200"
-                style={{
-                  backgroundColor: "#c9a227",
-                  color: "#ffffff",
-                  fontFamily: "'Oswald', sans-serif",
-                  fontSize: "14px",
-                  boxShadow: "0 4px 20px rgba(201,162,39,0.35)",
-                }}
-              >
-                <Send size={14} />
-                Send
-              </motion.button>
+              {/* Send */}
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <motion.button
+                  whileHover={{ scale: 1.05, backgroundColor: "#b8911f" }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    backgroundColor: "#c9a227",
+                    color: "#fff",
+                    fontFamily: "'Oswald', sans-serif",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    border: "none",
+                    borderRadius: "999px",
+                    padding: "12px 44px",
+                    cursor: "pointer",
+                    boxShadow: "0 4px 20px rgba(201,162,39,0.45)",
+                    transition: "background-color 0.2s",
+                  }}
+                >
+                  <Send size={14} />
+                  Send
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </div>
