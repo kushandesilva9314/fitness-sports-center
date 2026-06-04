@@ -66,6 +66,7 @@ export default function AboutSection() {
             src="/assets/bg.jpg"
             alt="Gym interior"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover object-center"
             priority
           />
@@ -114,14 +115,18 @@ export default function AboutSection() {
           >
             <defs>
               <linearGradient id="torn-fill" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%"   stopColor="#e8e4dc" stopOpacity="0" />
-                <stop offset="22%"  stopColor="#c8c4bc" stopOpacity="0.5" />
-                <stop offset="45%"  stopColor="#b8b4ac" stopOpacity="1" />
-                <stop offset="68%"  stopColor="#a8a49c" stopOpacity="0.9" />
+                <stop offset="0%" stopColor="#e8e4dc" stopOpacity="0" />
+                <stop offset="22%" stopColor="#c8c4bc" stopOpacity="0.5" />
+                <stop offset="45%" stopColor="#b8b4ac" stopOpacity="1" />
+                <stop offset="68%" stopColor="#a8a49c" stopOpacity="0.9" />
                 <stop offset="100%" stopColor="#2a2a2a" stopOpacity="0" />
               </linearGradient>
               <filter id="paper-shadow">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+                <feGaussianBlur
+                  in="SourceAlpha"
+                  stdDeviation="3"
+                  result="blur"
+                />
                 <feOffset dx="-4" dy="1" result="offset" />
                 <feComposite in="SourceGraphic" in2="offset" operator="over" />
               </filter>
@@ -206,7 +211,9 @@ export default function AboutSection() {
               <br />
               Build Strength In A Space
               <br />
-              <span style={{ color: "#c9a227" }}>Designed For Real Results</span>
+              <span style={{ color: "#c9a227" }}>
+                Designed For Real Results
+              </span>
             </motion.h2>
           </div>
 
@@ -253,7 +260,10 @@ export default function AboutSection() {
                   whileHover={{ scale: 1.05, backgroundColor: "#b8911f" }}
                   whileTap={{ scale: 0.97 }}
                   className="px-9 py-3 rounded-full bg-[#c9a227] text-white font-bold uppercase tracking-widest shadow-md transition-colors duration-200"
-                  style={{ fontFamily: "'Oswald', sans-serif", fontSize: "14px" }}
+                  style={{
+                    fontFamily: "'Oswald', sans-serif",
+                    fontSize: "14px",
+                  }}
                 >
                   Reach Us
                 </motion.button>

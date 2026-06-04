@@ -1,9 +1,50 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, Mail, MessageSquare, Send, Phone, MapPin } from "lucide-react";
+import { User, Mail, MessageSquare, Send, Phone, MapPin, CheckCircle, XCircle } from "lucide-react";
+import { useState } from "react";
 
 export default function ContactSection() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || !form.message) {
+      setStatus("error");
+      setErrorMsg("Please fill in all fields.");
+      return;
+    }
+
+    setStatus("loading");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setStatus("success");
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+        setErrorMsg(data.error || "Something went wrong.");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error. Please try again.");
+    }
+  };
+
   return (
     <section
       id="contact"
@@ -30,6 +71,9 @@ export default function ContactSection() {
           .contact-card {
             max-width: 100% !important;
           }
+          .contact-wrapper {
+            margin: 0 16px !important;
+          }
         }
       `}</style>
 
@@ -38,6 +82,7 @@ export default function ContactSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
+        className="contact-wrapper"
         style={{
           position: "relative",
           overflow: "hidden",
@@ -70,31 +115,9 @@ export default function ContactSection() {
           />
         </div>
 
-        {/* Decorative gold ring top-right */}
-        <div
-          style={{
-            position: "absolute",
-            top: -60,
-            right: -60,
-            width: 220,
-            height: 220,
-            borderRadius: "50%",
-            border: "2px solid rgba(201,162,39,0.18)",
-            zIndex: 1,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: -20,
-            right: -20,
-            width: 130,
-            height: 130,
-            borderRadius: "50%",
-            border: "1.5px solid rgba(201,162,39,0.12)",
-            zIndex: 1,
-          }}
-        />
+        {/* Decorative rings */}
+        <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%", border: "2px solid rgba(201,162,39,0.18)", zIndex: 1 }} />
+        <div style={{ position: "absolute", top: -20, right: -20, width: 130, height: 130, borderRadius: "50%", border: "1.5px solid rgba(201,162,39,0.12)", zIndex: 1 }} />
 
         {/* Content */}
         <div
@@ -123,7 +146,7 @@ export default function ContactSection() {
               boxShadow: "0 8px 48px rgba(0,0,0,0.65)",
             }}
           >
-            {/* Gold accent bar at top */}
+            {/* Gold accent bar */}
             <div style={{ height: "4px", background: "linear-gradient(to right, #c9a227, #f0d060, #c9a227)" }} />
 
             {/* Info strip */}
@@ -135,6 +158,7 @@ export default function ContactSection() {
                 gap: "24px",
                 alignItems: "center",
                 borderBottom: "1px solid #2a2a2a",
+                flexWrap: "wrap",
               }}
             >
               {[
@@ -143,14 +167,7 @@ export default function ContactSection() {
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   {item.icon}
-                  <span
-                    style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontSize: "12px",
-                      color: "#888",
-                      letterSpacing: "0.06em",
-                    }}
-                  >
+                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "12px", color: "#888", letterSpacing: "0.06em" }}>
                     {item.text}
                   </span>
                 </div>
@@ -179,139 +196,112 @@ export default function ContactSection() {
                 >
                   Contact Us
                 </h2>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "2px",
-                    backgroundColor: "#c9a227",
-                    margin: "8px auto 10px",
-                  }}
-                />
-                <p
-                  style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "14px",
-                    color: "#888",
-                    letterSpacing: "0.04em",
-                  }}
-                >
+                <div style={{ width: "40px", height: "2px", backgroundColor: "#c9a227", margin: "8px auto 10px" }} />
+                <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", color: "#888", letterSpacing: "0.04em" }}>
                   Any question or remarks? Just write us a message!
                 </p>
               </div>
 
-              {/* Name */}
-              <div style={{ marginBottom: "18px" }}>
-                <label
+              {/* Success message */}
+              {status === "success" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "8px",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "12px",
-                    color: "#c9a227",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    marginBottom: "8px",
+                    gap: "10px",
+                    backgroundColor: "rgba(34,197,94,0.12)",
+                    border: "1px solid rgba(34,197,94,0.3)",
+                    borderRadius: "10px",
+                    padding: "12px 16px",
+                    marginBottom: "20px",
                   }}
                 >
-                  <User size={12} color="#c9a227" />
-                  Name
+                  <CheckCircle size={16} color="#22c55e" />
+                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", color: "#22c55e", letterSpacing: "0.04em" }}>
+                    Message sent successfully!
+                  </span>
+                </motion.div>
+              )}
+
+              {/* Error message */}
+              {status === "error" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    backgroundColor: "rgba(239,68,68,0.12)",
+                    border: "1px solid rgba(239,68,68,0.3)",
+                    borderRadius: "10px",
+                    padding: "12px 16px",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <XCircle size={16} color="#ef4444" />
+                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", color: "#ef4444", letterSpacing: "0.04em" }}>
+                    {errorMsg}
+                  </span>
+                </motion.div>
+              )}
+
+              {/* Name */}
+              <div style={{ marginBottom: "18px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "12px", color: "#c9a227", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
+                  <User size={12} color="#c9a227" /> Name
                 </label>
                 <input
                   type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
                   placeholder="Your full name"
                   className="contact-input"
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    borderBottom: "1px solid #333",
-                    color: "#fff",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "14px",
-                    paddingBottom: "8px",
-                    display: "block",
-                  }}
+                  style={{ width: "100%", background: "transparent", border: "none", borderBottom: "1px solid #333", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", paddingBottom: "8px", display: "block" }}
                 />
               </div>
 
               {/* Email */}
               <div style={{ marginBottom: "18px" }}>
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "12px",
-                    color: "#c9a227",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Mail size={12} color="#c9a227" />
-                  Email
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "12px", color: "#c9a227", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
+                  <Mail size={12} color="#c9a227" /> Email
                 </label>
                 <input
                   type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
                   placeholder="Enter your email address here"
                   className="contact-input"
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    borderBottom: "1px solid #333",
-                    color: "#fff",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "14px",
-                    paddingBottom: "8px",
-                    display: "block",
-                  }}
+                  style={{ width: "100%", background: "transparent", border: "none", borderBottom: "1px solid #333", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", paddingBottom: "8px", display: "block" }}
                 />
               </div>
 
               {/* Message */}
               <div style={{ marginBottom: "24px" }}>
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "12px",
-                    color: "#c9a227",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <MessageSquare size={12} color="#c9a227" />
-                  Message
+                <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "12px", color: "#c9a227", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
+                  <MessageSquare size={12} color="#c9a227" /> Message
                 </label>
                 <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
                   placeholder="Enter your message here..."
                   rows={3}
                   className="contact-input"
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    borderBottom: "1px solid #333",
-                    color: "#fff",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: "14px",
-                    paddingBottom: "8px",
-                    resize: "none",
-                    display: "block",
-                  }}
+                  style={{ width: "100%", background: "transparent", border: "none", borderBottom: "1px solid #333", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontSize: "14px", paddingBottom: "8px", resize: "none", display: "block" }}
                 />
               </div>
 
               {/* Send */}
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <motion.button
-                  whileHover={{ scale: 1.05, backgroundColor: "#b8911f" }}
+                  onClick={handleSubmit}
+                  disabled={status === "loading"}
+                  whileHover={{ scale: status === "loading" ? 1 : 1.05, backgroundColor: "#b8911f" }}
                   whileTap={{ scale: 0.97 }}
                   style={{
                     display: "flex",
@@ -327,13 +317,14 @@ export default function ContactSection() {
                     border: "none",
                     borderRadius: "999px",
                     padding: "12px 44px",
-                    cursor: "pointer",
+                    cursor: status === "loading" ? "not-allowed" : "pointer",
+                    opacity: status === "loading" ? 0.7 : 1,
                     boxShadow: "0 4px 20px rgba(201,162,39,0.45)",
                     transition: "background-color 0.2s",
                   }}
                 >
                   <Send size={14} />
-                  Send
+                  {status === "loading" ? "Sending..." : "Send"}
                 </motion.button>
               </div>
             </div>
