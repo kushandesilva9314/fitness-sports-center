@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Fitness Sports Center",
   description: "Your Strength Starts Here",
+  icons: {
+    icon: "/assets/lg.jpg",
+  },
 };
 
 export default function RootLayout({
